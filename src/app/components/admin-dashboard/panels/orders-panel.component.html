@@ -1,0 +1,42 @@
+<div class="panel-content">
+  <h2>Order Management</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle">
+      <thead class="table-success">
+        <tr>
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Status</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Agent</th>
+          <th>Invoice</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let o of orders">
+          <td>{{ o.id }}</td>
+          <td>{{ o.customer }}</td>
+          <td>
+            <select class="form-select form-select-sm" [(ngModel)]="o.status" (change)="updateOrderStatus(o.id, o.status)">
+              <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+            </select>
+          </td>
+          <td>{{ o.items }}</td>
+          <td>₹{{ o.total }}</td>
+          <td>
+            <input class="form-control form-control-sm" [(ngModel)]="o.agent" (change)="assignAgent(o.id, o.agent)" placeholder="Assign agent">
+          </td>
+          <td>
+            <span *ngIf="o.invoice" class="badge bg-success">Yes</span>
+            <button *ngIf="!o.invoice" class="btn btn-sm btn-outline-primary" (click)="generateInvoice(o.id)">Generate</button>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-danger" (click)="deleteOrder(o.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> 

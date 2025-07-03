@@ -1,0 +1,26 @@
+<div class="signup-container">
+  <h2>Create Your GrocBee Account</h2>
+  <form (ngSubmit)="onSignup()">
+    <div *ngIf="success" class="alert alert-success text-center">{{ success }}</div>
+    <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+    <div class="input-icon">
+      <input [(ngModel)]="user.fullName" name="fullName" type="text" placeholder="Full Name" required />
+    </div>
+    <div class="input-icon">
+      <input [(ngModel)]="user.email" name="email" type="email" placeholder="Email address" required />
+    </div>
+    <div class="input-icon">
+      <input [(ngModel)]="user.phone" name="phone" type="tel" placeholder="Phone" required />
+    </div>
+    <div class="input-icon">
+      <input [(ngModel)]="user.address" name="address" type="text" placeholder="Address" required />
+    </div>
+    <div class="input-icon">
+      <input [(ngModel)]="user.password" name="password" type="password" placeholder="Password" required />
+    </div>
+    <button type="submit" class="login-btn">Sign Up</button>
+  </form>
+  <div class="login-footer">
+    Already have an account? <a routerLink="/login">Login</a>
+  </div>
+</div>

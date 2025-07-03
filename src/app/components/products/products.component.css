@@ -1,0 +1,226 @@
+/* Product Cards */
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.product-price {
+  text-align: center;
+}
+
+.price {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+/* Category Filter Buttons */
+.category-filters {
+  margin-bottom: 2rem;
+}
+
+.category-filters .btn-group .btn {
+  background: #4CAF50 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 2em !important;
+  font-weight: 500;
+  padding: 0.6em 2em;
+  margin: 0 0.5em;
+  box-shadow: 0 2px 8px #4caf5033;
+  transition: background 0.2s, color 0.2s, font-weight 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.category-filters .btn-group .btn:hover,
+.category-filters .btn-group .btn.btn-success,
+.category-filters .btn-group .btn[class*='btn-success'],
+.category-filters .btn-group .btn[class*='btn-success']:hover,
+.category-filters .btn-group .btn[class*='btn-outline-success']:hover,
+.category-filters .btn-group .btn[class*='btn-outline-success'].btn-success {
+  background: #388e3c !important;
+  color: #fff !important;
+  font-weight: 700;
+  transform: scale(1.05);
+}
+
+/* Cart Badge */
+.badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .btn-group {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .btn-group .btn {
+    margin: 2px;
+    font-size: 0.9rem;
+    padding: 6px 15px;
+  }
+  
+  .card-title {
+    font-size: 1rem;
+  }
+  
+  .price {
+    font-size: 1.1rem;
+  }
+}
+
+/* Add to Cart Button */
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+/* Page Header */
+h2 {
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* No Products Message */
+.text-center h4 {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.text-center p {
+  color: #999;
+  font-size: 0.95rem;
+}
+
+.navbar {
+  background: #242424 !important;
+  box-shadow: 0 2px 8px #0001;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2em 2em;
+  z-index: 100;
+}
+
+.btn-success, .btn.btn-success, .login-btn, .add-cart-btn, .pillbutton {
+  background: #4CAF50 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 2em !important;
+  font-weight: 600;
+  box-shadow: 0 2px 8px #4caf5033;
+  transition: background 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.btn-success:hover, .btn.btn-success:hover, .login-btn:hover, .add-cart-btn:hover, .pillbutton:hover {
+  background: #388e3c !important;
+  transform: scale(1.05);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2em;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: #81c07d;
+  text-decoration: none;
+  font-size: 1.1em;
+  font-weight: 500;
+  padding: 0.3em 1em;
+  border-radius: 1.5em;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+  background: #eafbe7;
+  color: #4CAF50;
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2em;
+  color: #4CAF50;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.products-bg {
+  min-height: 100vh;
+  background: #f7faf7;
+  position: relative;
+  padding-bottom: 2em;
+}
+
+.cart-count-badge {
+  background: #4CAF50;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.85em;
+  padding: 0.25em 0.6em;
+  position: relative;
+  top: -0.7em;
+  left: -0.3em;
+  font-weight: bold;
+  box-shadow: 0 2px 8px #4caf5033;
+  margin-left: 0.2em;
+}
+
+.nav-links .fa-shopping-cart {
+  margin-right: 0.3em;
+  font-size: 1.1em;
+}
+
+.doodle-bg {
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  background-image: url("data:image/svg+xml;utf8,<svg width='400' height='400' xmlns='http://www.w3.org/2000/svg'><g><circle cx='40' cy='60' r='12' fill='%23e74c3c' stroke='%23c0392b' stroke-width='2'/><ellipse cx='320' cy='100' rx='10' ry='18' fill='%23ffe066' stroke='%23f9ca24' stroke-width='2'/><rect x='110' y='190' width='24' height='14' rx='7' fill='%2349b675' stroke='%23398d4c' stroke-width='2'/><ellipse cx='250' cy='350' rx='14' ry='10' fill='%23e17055' stroke='%23d35400' stroke-width='2'/><ellipse cx='60' cy='320' rx='14' ry='10' fill='%236c3483' stroke='%235a2c6c' stroke-width='2'/><rect x='340' y='240' width='10' height='30' rx='5' fill='%23f6e58d' stroke='%23f9ca24' stroke-width='2'/><ellipse cx='200' cy='80' rx='12' ry='12' fill='%239ae66e' stroke='%2349b675' stroke-width='2'/></g></svg>");
+  background-repeat: repeat;
+  background-size: 400px 400px;
+}

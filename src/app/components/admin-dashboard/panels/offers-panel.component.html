@@ -1,0 +1,57 @@
+<div class="panel-content">
+  <h2>Promotions & Offers</h2>
+  <button class="btn-offer-action" (click)="showAddForm = !showAddForm" style="margin-bottom:1em;">{{ showAddForm ? 'Cancel' : 'Add Offer' }}</button>
+  <form *ngIf="showAddForm" (ngSubmit)="addOffer()" style="margin-bottom:2em;">
+    <input type="text" [(ngModel)]="newOffer.code" name="code" placeholder="Code" required class="form-control" style="margin-right:1em;display:inline-block;width:120px;">
+    <input type="text" [(ngModel)]="newOffer.desc" name="desc" placeholder="Description" required class="form-control" style="margin-right:1em;display:inline-block;width:220px;">
+    <select [(ngModel)]="newOffer.type" name="type" class="form-control" style="margin-right:1em;display:inline-block;width:120px;">
+      <option value="Discount">Discount</option>
+      <option value="Shipping">Shipping</option>
+      <option value="BOGO">BOGO</option>
+    </select>
+    <button type="submit" class="btn-offer-action">Add</button>
+  </form>
+  <table class="table table-striped" style="width:100%;background:#fff;border-radius:1em;overflow:hidden;">
+    <thead>
+      <tr style="background:#f7f7f7;">
+        <th>Code</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let offer of offers">
+        <td *ngIf="editOfferId !== offer.id">{{ offer.code }}</td>
+        <td *ngIf="editOfferId === offer.id"><input [(ngModel)]="editOffer.code" name="editCode{{offer.id}}" class="form-control"></td>
+        <td *ngIf="editOfferId !== offer.id">{{ offer.desc }}</td>
+        <td *ngIf="editOfferId === offer.id"><input [(ngModel)]="editOffer.desc" name="editDesc{{offer.id}}" class="form-control"></td>
+        <td *ngIf="editOfferId !== offer.id">{{ offer.type }}</td>
+        <td *ngIf="editOfferId === offer.id">
+          <select [(ngModel)]="editOffer.type" name="editType{{offer.id}}" class="form-control">
+            <option value="Discount">Discount</option>
+            <option value="Shipping">Shipping</option>
+            <option value="BOGO">BOGO</option>
+          </select>
+        </td>
+        <td>
+          <span [ngClass]="{'text-success': offer.active, 'text-danger': !offer.active}" style="font-weight:600;">
+            {{ offer.active ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+        <td>
+          <ng-container *ngIf="editOfferId !== offer.id">
+            <button class="btn-offer-action" (click)="toggleOffer(offer.id)">{{ offer.active ? 'Disable' : 'Enable' }}</button>
+            <button class="btn-offer-action" (click)="startEdit(offer)">Edit</button>
+            <button class="btn-offer-action" (click)="deleteOffer(offer.id)">Delete</button>
+          </ng-container>
+          <ng-container *ngIf="editOfferId === offer.id">
+            <button class="btn btn-success btn-sm" (click)="saveEdit()">Save</button>
+            <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Cancel</button>
+          </ng-container>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div> 

@@ -1,0 +1,26 @@
+<body class="login-bg">
+  <header class="navbar">
+    <div class="logo">🍃GrocBee</div>
+  </header>
+  <div class="login-card">
+    <h2>Login</h2>
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm" autocomplete="off">
+      <div class="input-group">
+        <i class="fa fa-envelope"></i>
+        <input type="email" id="loginEmail" [(ngModel)]="email" name="email" placeholder="Email" required />
+      </div>
+      <div class="input-group">
+        <i class="fa fa-lock"></i>
+        <input [type]="showPassword ? 'text' : 'password'" id="loginPassword" [(ngModel)]="password" name="password" placeholder="Password" required />
+        <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" (click)="togglePassword()" style="right:1em;top:50%;position:absolute;transform:translateY(-50%);color:#aaa;cursor:pointer;"></i>
+      </div>
+      <div class="error-msg" *ngIf="error">{{ error }}</div>
+      <div class="success-msg" *ngIf="success">{{ success }}</div>
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+    <div class="signup-link">Don't have an account? <a routerLink="/signup">Sign up &rarr;</a></div>
+    <div class="signup-link" style="margin-top:0.5em;">
+      <a routerLink="/admin-login" style="color:#e67e22;font-weight:600;">Admin? Login here &rarr;</a>
+    </div>
+  </div>
+</body>

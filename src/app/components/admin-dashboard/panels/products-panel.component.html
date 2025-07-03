@@ -1,0 +1,156 @@
+<div class="panel-content">
+  <h2>Product Management</h2>
+
+  <!-- Add Product Button -->
+  <button class="btn btn-success mb-3" (click)="toggleAddForm()" *ngIf="!showAddForm && !showEditForm">Add New Product</button>
+
+  <!-- Add Product Form -->
+  <form *ngIf="showAddForm" (ngSubmit)="addProduct()" class="mb-4 border rounded p-3 bg-light">
+    <h4>Add New Product</h4>
+    <div class="row">
+      <div class="col-md-4 mb-2">
+        <label>Name:</label>
+        <input class="form-control" [(ngModel)]="newProduct.name" name="name" required>
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Price:</label>
+        <input class="form-control" type="number" [(ngModel)]="newProduct.price" name="price" required>
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Quantity:</label>
+        <input class="form-control" type="number" [(ngModel)]="newProduct.quantity" name="quantity" required>
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Category:</label>
+        <input class="form-control" [(ngModel)]="newProduct.category" name="category" required>
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Brand:</label>
+        <input class="form-control" [(ngModel)]="newProduct.brand" name="brand">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-2">
+        <label>Description:</label>
+        <textarea class="form-control" [(ngModel)]="newProduct.description" name="description"></textarea>
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Discount (%):</label>
+        <input class="form-control" type="number" [(ngModel)]="newProduct.discount" name="discount" min="0" max="100">
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Min Stock:</label>
+        <input class="form-control" type="number" [(ngModel)]="newProduct.minStock" name="minStock">
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Max Stock:</label>
+        <input class="form-control" type="number" [(ngModel)]="newProduct.maxStock" name="maxStock">
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Image URL:</label>
+        <input class="form-control" [(ngModel)]="newProduct.image" name="image">
+      </div>
+    </div>
+    <div class="mt-2">
+      <button type="submit" class="btn btn-success">Add Product</button>
+      <button type="button" class="btn btn-secondary ms-2" (click)="toggleAddForm()">Cancel</button>
+    </div>
+  </form>
+
+  <!-- Edit Product Form -->
+  <form *ngIf="showEditForm && editProduct" (ngSubmit)="updateProduct()" class="mb-4 border rounded p-3 bg-light">
+    <h4>Edit Product</h4>
+    <div class="row">
+      <div class="col-md-4 mb-2">
+        <label>Name:</label>
+        <input class="form-control" [(ngModel)]="editProduct.name" name="editName" required>
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Price:</label>
+        <input class="form-control" type="number" [(ngModel)]="editProduct.price" name="editPrice" required>
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Quantity:</label>
+        <input class="form-control" type="number" [(ngModel)]="editProduct.quantity" name="editQuantity" required>
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Category:</label>
+        <input class="form-control" [(ngModel)]="editProduct.category" name="editCategory" required>
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Brand:</label>
+        <input class="form-control" [(ngModel)]="editProduct.brand" name="editBrand">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-2">
+        <label>Description:</label>
+        <textarea class="form-control" [(ngModel)]="editProduct.description" name="editDescription"></textarea>
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Discount (%):</label>
+        <input class="form-control" type="number" [(ngModel)]="editProduct.discount" name="editDiscount" min="0" max="100">
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Min Stock:</label>
+        <input class="form-control" type="number" [(ngModel)]="editProduct.minStock" name="editMinStock">
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Max Stock:</label>
+        <input class="form-control" type="number" [(ngModel)]="editProduct.maxStock" name="editMaxStock">
+      </div>
+      <div class="col-md-2 mb-2">
+        <label>Image URL:</label>
+        <input class="form-control" [(ngModel)]="editProduct.image" name="editImage">
+      </div>
+    </div>
+    <div class="mt-2">
+      <button type="submit" class="btn btn-success">Update Product</button>
+      <button type="button" class="btn btn-secondary ms-2" (click)="showEditForm = false">Cancel</button>
+    </div>
+  </form>
+
+  <!-- Product Table -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle">
+      <thead class="table-success">
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Qty</th>
+          <th>Category</th>
+          <th>Brand</th>
+          <th>Stock</th>
+          <th>Discount</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products">
+          <td>
+            <img *ngIf="p.image" [src]="p.image" style="width:40px;height:40px;object-fit:cover;">
+          </td>
+          <td>{{ p.name }}</td>
+          <td>₹{{ p.price }}</td>
+          <td>{{ p.quantity }}</td>
+          <td>{{ p.category }}</td>
+          <td>{{ p.brand }}</td>
+          <td>Min: {{ p.minStock }}<br>Max: {{ p.maxStock }}</td>
+          <td>{{ p.discount }}%</td>
+          <td>
+            <span *ngIf="!p.hidden" class="badge bg-success">Visible</span>
+            <span *ngIf="p.hidden" class="badge bg-secondary">Hidden</span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-primary me-1" (click)="edit(p)">Edit</button>
+            <button class="btn btn-sm btn-danger me-1" (click)="deleteProduct(p.id)">Delete</button>
+            <button class="btn btn-sm btn-warning me-1" *ngIf="!p.hidden" (click)="hideProduct(p.id)">Hide</button>
+            <button class="btn btn-sm btn-success me-1" *ngIf="p.hidden" (click)="unhideProduct(p.id)">Unhide</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> 

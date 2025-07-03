@@ -1,0 +1,222 @@
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <aside class="sidebar" [ngClass]="{open: sidebarOpen}" id="sidebar">
+   
+   
+    <ul class="sidebar-menu">
+      <li>
+        <a href="#" (click)="setPanel('dashboard'); $event.preventDefault();" [ngClass]="{active: currentPanel === 'dashboard'}" class="dashboard-btn">
+          <i class="fa fa-tachometer-alt"></i> Dashboard
+        </a>
+      </li>
+      <li>
+        <a href="#" (click)="setPanel('users'); $event.preventDefault();" [ngClass]="{active: currentPanel === 'users'}">
+          <i class="fa fa-users"></i> User Management
+        </a>
+      </li>
+      <li class="dropdown" [ngClass]="{open: dropdownOpen === 'products'}">
+        <a href="#"
+           (click)="openProductManagementDropdown(); $event.preventDefault();"
+           [attr.aria-expanded]="dropdownOpen === 'products'"
+           [ngClass]="{active: currentPanel === 'addProduct' || currentPanel === 'viewProducts' || currentPanel === 'productManagement'}">
+          <i class="fa fa-box"></i> Product Management
+          <i class="fa fa-chevron-down" [ngClass]="{'rotate': dropdownOpen === 'products'}" style="transition: transform 0.3s;"></i>
+        </a>
+        <ul class="dropdown-menu" *ngIf="dropdownOpen === 'products'">
+          <li>
+            <a href="#" (click)="setPanel('addProduct'); $event.preventDefault();" [ngClass]="{active: currentPanel === 'addProduct'}">Add Product</a>
+          </li>
+          <li>
+            <a href="#" (click)="setPanel('viewProducts'); $event.preventDefault();" [ngClass]="{active: currentPanel === 'viewProducts'}">View Products</a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#" (click)="setPanel('orders'); $event.preventDefault();" [ngClass]="{active: currentPanel === 'orders'}">
+          <i class="fa fa-shopping-cart"></i> Orders
+        </a>
+      </li>
+      <li>
+        <a href="#" (click)="setPanel('offers'); $event.preventDefault();" [ngClass]="{active: currentPanel === 'offers'}" class="offers-btn">
+          <i class="fa fa-tags"></i> Offers
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-panel">
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+      <div class="navbar-left">
+        <span class="brand-name"><i class="fa-solid fa-leaf"></i> GrocBee</span>
+        <span class="admin-title">{{ panelTitles[currentPanel] }}</span>
+      </div>
+      <div class="navbar-right">
+        <button class="notification-btn" (click)="notify()" aria-label="Notifications">
+          <i class="fa fa-bell"></i>
+        </button>
+        <button
+          class="cart-btn"
+          id="adminCartBtn"
+          style="
+            position: relative;
+            margin-right: 1em;
+            background: linear-gradient(90deg, #4caf50 60%, #ffa500 100%);
+            color: #fff;
+            border: none;
+            border-radius: 2em;
+            padding: 0.5em 1.2em;
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: 0 2px 8px #4caf5033;
+            transition: background 0.2s, transform 0.2s;
+            cursor: pointer;
+            outline: none;
+          "
+          (click)="showCartModal = true"
+          aria-label="Open cart modal"
+        >
+          <i class="fa fa-shopping-cart"></i>
+          <span
+            id="adminCartCount"
+            style="
+              position: absolute;
+              top: -8px;
+              right: -8px;
+              background: #e74c3c;
+              color: #fff;
+              font-size: 0.8em;
+              padding: 2px 7px;
+              border-radius: 50%;
+            "
+            >{{ adminCartCount }}</span
+          >
+        </button>
+        <span class="admin-name">Hi, Admin</span>
+        <button class="logout-btn" (click)="logout()">
+          <i class="fa fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </nav>
+
+    <!-- Dashboard Overview -->
+    <div class="panel-content" *ngIf="currentPanel === 'dashboard'">
+      <div class="analytics-cards">
+        <div class="card">
+          <div class="card-icon"><i class="fa fa-users"></i></div>
+          <div class="card-info">
+            <h3>Total Users</h3>
+            <p>1,234</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i class="fa fa-box"></i></div>
+          <div class="card-info">
+            <h3>Products</h3>
+            <p>567</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i class="fa fa-shopping-cart"></i></div>
+          <div class="card-info">
+            <h3>Orders</h3>
+            <p>89</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i class="fa fa-dollar-sign"></i></div>
+          <div class="card-info">
+            <h3>Revenue</h3>
+            <p>$12,345</p>
+          </div>
+        </div>
+      </div>
+      <div class="recent-activity">
+        <h2>Recent Activity</h2>
+        <ul>
+          <li>
+            New order #1234 received <span class="activity-time">2 min ago</span>
+          </li>
+          <li>
+            Product "Organic Apples" stock updated
+            <span class="activity-time">15 min ago</span>
+          </li>
+          <li>
+            New user registration <span class="activity-time">1 hour ago</span>
+          </li>
+          <li>
+            Payment processed for order #1233 <span class="activity-time">2 hours ago</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Other Panels -->
+    <app-users-panel *ngIf="currentPanel === 'users'"></app-users-panel>
+    <app-products-panel *ngIf="currentPanel === 'addProduct' || currentPanel === 'viewProducts'"></app-products-panel>
+    <app-orders-panel *ngIf="currentPanel === 'orders'"></app-orders-panel>
+    <app-offers-panel *ngIf="currentPanel === 'offers'"></app-offers-panel>
+
+    <div class="panel-content" *ngIf="currentPanel === 'productManagement'">
+      <h2>Product Management</h2>
+      <form (ngSubmit)="addProductToList()" style="margin-bottom:1em;display:flex;gap:1em;align-items:center;">
+        <input type="text" [(ngModel)]="newProduct.name" name="productName" placeholder="Product Name" required class="form-control" style="width:180px;">
+        <input type="number" [(ngModel)]="newProduct.price" name="productPrice" placeholder="Price" required class="form-control" style="width:120px;">
+        <button type="submit" class="btn-product-action">Add Product</button>
+      </form>
+      <table class="table table-striped" style="width:100%;background:#fff;border-radius:1em;overflow:hidden;">
+        <thead>
+          <tr style="background:#f7f7f7;">
+            <th>Name</th>
+            <th>Price</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let prod of productList; let i = index">
+            <td>{{ prod.name }}</td>
+            <td>{{ prod.price }}</td>
+            <td>
+              <button class="btn-product-action" (click)="removeProductFromList(i)">Remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Cart Modal/Panel -->
+  <app-cart-modal [show]="showCartModal" (close)="showCartModal = false"></app-cart-modal>
+</div>
+
+<!-- Secondary Navbar - Looks like it may be unrelated to dashboard? -->
+<nav class="navbar navbar-expand-lg index-dark-navbar-bg">
+  <div class="container-fluid">
+    <a class="navbar-brand index-green-logo" routerLink="/">🍃GrocBee</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item">
+          <a routerLink="/" class="nav-link index-green-link">Home</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/products" class="nav-link index-green-link">Products</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/login" class="nav-link index-green-link">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

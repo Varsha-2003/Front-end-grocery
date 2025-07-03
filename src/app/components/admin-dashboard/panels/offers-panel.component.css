@@ -1,0 +1,20 @@
+/* Offers Panel Styles */
+.panel-content { padding: 1rem; } 
+
+.btn-offer-action {
+  background: linear-gradient(90deg, #4caf50 60%, #388e3c 100%);
+  color: #fff !important;
+  border: none !important;
+  border-radius: 2em;
+  font-weight: 600;
+  padding: 0.35em 1.2em;
+  font-size: 0.98em;
+  margin-right: 0.4em;
+  box-shadow: 0 2px 8px #4caf5022;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.btn-offer-action:hover {
+  background: linear-gradient(90deg, #388e3c 60%, #2e7d32 100%);
+  box-shadow: 0 4px 16px #388e3c33;
+  color: #fff !important;
+} 

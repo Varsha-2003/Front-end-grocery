@@ -1,0 +1,156 @@
+<nav class="navbar navbar-expand-lg feedback-dark-navbar-bg">
+  <div class="container-fluid">
+    <a class="navbar-brand feedback-green-logo" routerLink="/">🍃GrocBee</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a routerLink="/" class="nav-link feedback-green-link">Home</a></li>
+        <li class="nav-item"><a routerLink="/products" class="nav-link feedback-green-link">Products</a></li>
+        <li class="nav-item"><a routerLink="/login" class="nav-link feedback-green-link">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="text-center">
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading order details...</p>
+      </div>
+
+      <!-- Order Completion Success -->
+      <div *ngIf="!isLoading && completeOrder && !feedbackSubmitted" class="row">
+        <div class="col-lg-4 mb-4">
+          <div class="card border-success">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0">
+                <i class="fas fa-check-circle me-2"></i>Order Completed!
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="text-center mb-3">
+                <i class="fas fa-shipping-fast fa-3x text-success mb-2"></i>
+                <h6>Your order has been successfully placed!</h6>
+              </div>
+              
+              <div class="order-summary">
+                <h6>Order Details:</h6>
+                <div class="mb-2">
+                  <strong>Order Date:</strong> {{ completeOrder.orderDate | date:'medium' }}
+                </div>
+                <div class="mb-2">
+                  <strong>Delivery To:</strong> {{ completeOrder.deliveryDetails.name }}
+                </div>
+                <div class="mb-2">
+                  <strong>Address:</strong> {{ completeOrder.deliveryDetails.address }}
+                </div>
+                <div class="mb-2">
+                  <strong>Phone:</strong> {{ completeOrder.deliveryDetails.phone }}
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between">
+                  <span>Total Amount:</span>
+                  <span class="fw-bold text-success">₹{{ completeOrder.total }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback Form -->
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0">
+                <i class="fas fa-star me-2"></i>We Value Your Feedback
+              </h5>
+            </div>
+            <div class="card-body">
+              <p class="text-muted mb-4">
+                Thank you for choosing GrocBee! Please take a moment to share your experience with us.
+              </p>
+
+              <form (ngSubmit)="submitFeedback()">
+                <div class="mb-4">
+                  <label class="form-label">Rate Your Experience</label>
+                  <div class="star-rating">
+                    <div class="stars">
+                      <i *ngFor="let star of [1,2,3,4,5]" 
+                         class="fas fa-star star" 
+                         [class.filled]="star <= rating"
+                         [class.empty]="star > rating"
+                         (click)="rating = star">
+                      </i>
+                    </div>
+                    <div class="rating-text mt-2">
+                      <span class="text-muted">{{ rating }} Star{{ rating > 1 ? 's' : '' }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <label for="feedbackText" class="form-label">Your Feedback</label>
+                  <textarea 
+                    [(ngModel)]="feedbackText" 
+                    name="feedbackText" 
+                    id="feedbackText" 
+                    rows="5" 
+                    class="form-control" 
+                    placeholder="Tell us about your experience with GrocBee..."
+                    required>
+                  </textarea>
+                </div>
+
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-success" (click)="goToHome()">
+                    <i class="fas fa-home me-2"></i>Go to Home
+                  </button>
+                  <button type="submit" class="btn btn-success flex-grow-1">
+                    <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback Submitted Success -->
+      <div *ngIf="!isLoading && feedbackSubmitted" class="text-center">
+        <div class="card border-success">
+          <div class="card-body">
+            <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+            <h3 class="text-success">Thank You!</h3>
+            <p class="lead">Your feedback has been submitted successfully.</p>
+            <p class="text-muted">We appreciate your time and will use your feedback to improve our services.</p>
+            
+            <div class="mt-4">
+              <button class="btn btn-success me-2" (click)="goToProducts()">
+                <i class="fas fa-shopping-cart me-2"></i>Continue Shopping
+              </button>
+              <button class="btn btn-success" (click)="goToHome()">
+                <i class="fas fa-home me-2"></i>Go to Home
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Order Found -->
+      <div *ngIf="!isLoading && !completeOrder" class="text-center">
+        <div class="alert alert-warning">
+          <h4>No Order Found</h4>
+          <p>Please complete an order to provide feedback.</p>
+          <a routerLink="/products" class="btn btn-success">Start Shopping</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

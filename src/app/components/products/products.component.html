@@ -1,0 +1,68 @@
+<nav class="navbar">
+  <div class="logo">🍃GrocBee</div>
+  <nav class="nav-links">
+    <a routerLink="/">Home</a>
+    <a routerLink="/products" class="active">Products</a>
+    <a routerLink="/cart">
+      <i class="fa fa-shopping-cart"></i>
+      <span class="cart-count-badge" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
+    </a>
+    <a routerLink="/login">Logout</a>
+  </nav>
+</nav>
+
+<div class="products-bg">
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="text-center mb-4">Our Fresh Products</h2>
+        
+        <!-- Category Filter Buttons -->
+        <div class="category-filters text-center mb-4">
+          <div class="btn-group" role="group">
+            <button 
+              *ngFor="let category of categories" 
+              type="button" 
+              class="btn"
+              [class.btn-success]="selectedCategory === category.id"
+              [class.btn-outline-success]="selectedCategory !== category.id"
+              (click)="filterByCategory(category.id)">
+              {{ category.name }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-6 mb-4" *ngFor="let product of filteredProducts">
+            <div class="card h-100 product-card">
+              <img [src]="product.imageUrl" class="card-img-top" [alt]="product.productName">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ product.productName }}</h5>
+                <div class="mb-1"><span class="badge bg-secondary">{{ product.brand }}</span></div>
+                <p class="card-text flex-grow-1">{{ product.description }}</p>
+                <div class="product-price mb-2">
+                  <span class="price">₹{{ product.price }} {{ product.unit }}</span>
+                </div>
+                <div class="mb-2 text-muted" style="font-size:0.95em;">Stock left: {{ product.stockQuantity }}</div>
+                <button 
+                  class="btn btn-success w-100" 
+                  (click)="addToCart(product)"
+                  [disabled]="product.stockQuantity === 0">
+                  <i class="fas fa-shopping-cart me-2"></i>
+                  {{ product.stockQuantity === 0 ? 'Out of Stock' : 'Add to Cart' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- No Products Message -->
+        <div *ngIf="filteredProducts.length === 0" class="text-center mt-5">
+          <h4>No products found in this category</h4>
+          <p>Try selecting a different category or check back later for new products.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

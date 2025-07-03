@@ -1,0 +1,83 @@
+.doodle-bg {
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  background-image: url("data:image/svg+xml;utf8,<svg width='400' height='400' xmlns='http://www.w3.org/2000/svg'><g><circle cx='40' cy='60' r='12' fill='%23e74c3c' stroke='%23c0392b' stroke-width='2'/><ellipse cx='320' cy='100' rx='10' ry='18' fill='%23ffe066' stroke='%23f9ca24' stroke-width='2'/><rect x='110' y='190' width='24' height='14' rx='7' fill='%2349b675' stroke='%23398d4c' stroke-width='2'/><ellipse cx='250' cy='350' rx='14' ry='10' fill='%23e17055' stroke='%23d35400' stroke-width='2'/><ellipse cx='60' cy='320' rx='14' ry='10' fill='%236c3483' stroke='%235a2c6c' stroke-width='2'/><rect x='340' y='240' width='10' height='30' rx='5' fill='%23f6e58d' stroke='%23f9ca24' stroke-width='2'/><ellipse cx='200' cy='80' rx='12' ry='12' fill='%239ae66e' stroke='%2349b675' stroke-width='2'/></g></svg>");
+  background-repeat: repeat;
+  background-size: 400px 400px;
+}
+
+body, :host {
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  background-image: url("data:image/svg+xml;utf8,<svg width='400' height='400' xmlns='http://www.w3.org/2000/svg'><g><circle cx='40' cy='60' r='12' fill='%23e74c3c' stroke='%23c0392b' stroke-width='2'/><ellipse cx='320' cy='100' rx='10' ry='18' fill='%23ffe066' stroke='%23f9ca24' stroke-width='2'/><rect x='110' y='190' width='24' height='14' rx='7' fill='%2349b675' stroke='%23398d4c' stroke-width='2'/><ellipse cx='250' cy='350' rx='14' ry='10' fill='%23e17055' stroke='%23d35400' stroke-width='2'/><ellipse cx='60' cy='320' rx='14' ry='10' fill='%236c3483' stroke='%235a2c6c' stroke-width='2'/><rect x='340' y='240' width='10' height='30' rx='5' fill='%23f6e58d' stroke='%23f9ca24' stroke-width='2'/><ellipse cx='200' cy='80' rx='12' ry='12' fill='%239ae66e' stroke='%2349b675' stroke-width='2'/></g></svg>");
+  background-repeat: repeat;
+  background-size: 400px 400px;
+  font-family: 'Poppins', Arial, sans-serif;
+}
+
+.delivery-container {
+  background: rgba(255,255,255,0.92);
+  border-radius: 1.2em;
+  box-shadow: 0 2px 16px #0002;
+  max-width: 600px;
+  margin: 4vh auto;
+  padding: 2.5em 2em 2em 2em;
+}
+
+.card {
+  max-width: 600px;
+  margin: auto;
+  border-radius: 1rem;
+}
+
+.delivery-btn, .back-btn {
+  background: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 2em;
+  padding: 1em 2.5em;
+  font-size: 1.1em;
+  font-weight: 600;
+  box-shadow: 0 2px 8px #4caf5033;
+  transition: background 0.2s, transform 0.2s;
+  cursor: pointer;
+  margin: 0.5em 0.5em 0.5em 0;
+}
+.delivery-btn:hover, .back-btn:hover {
+  background: #388e3c;
+  transform: scale(1.05);
+}
+
+/* Index-style dark navbar for delivery */
+.delivery-dark-navbar-bg {
+  background: #242424;
+  box-shadow: 0 2px 8px #0001;
+}
+.delivery-green-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2em;
+  color: #4CAF50 !important;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.delivery-dark-navbar-bg .navbar-toggler {
+  border-color: #4CAF50;
+}
+.delivery-green-link {
+  color: #81c07d !important;
+  text-decoration: none;
+  font-size: 1.1em;
+  font-weight: 500;
+  padding: 0.3em 1em;
+  border-radius: 1.5em;
+  transition: background 0.2s, color 0.2s;
+}
+.delivery-green-link:hover {
+  background: #eafbe7;
+  color: #4CAF50 !important;
+}
+
+/* Remove previous white navbar styles */
+.delivery-navbar-bg, .delivery-navbar-bg .navbar-brand, .delivery-navbar-bg .nav-link, .delivery-navbar-bg .nav-link:hover {
+  all: unset;
+}

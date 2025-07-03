@@ -1,0 +1,23 @@
+<div class="admin-login-container">
+  <h2> AdminLogin</h2>
+  <form (ngSubmit)="login()">
+    <div *ngIf="success" class="alert alert-success text-center">{{ success }}</div>
+    <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+    <div class="input-icon">
+      <input [(ngModel)]="username" name="username" type="text" placeholder="Username" required />
+      <i class="fa fa-user"></i>
+    </div>
+    <div class="input-icon">
+      <input [(ngModel)]="password" name="password" type="password" placeholder="Password" required />
+      <i class="fa fa-lock"></i>
+    </div>
+    <div class="login-actions">
+      <label><input type="checkbox" style="margin-right:0.4em;" /> Remember ME</label>
+      <a href="#" style="color:#fff;text-decoration:underline;">Forgot Password</a>
+    </div>
+    <button type="submit" class="login-btn">Login</button>
+  </form>
+  <div class="login-footer">
+    Don't have account? <a href="/signup">Register</a>
+  </div>
+</div>

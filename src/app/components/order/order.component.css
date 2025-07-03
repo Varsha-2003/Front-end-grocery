@@ -1,0 +1,24 @@
+table {
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.cart-dark-navbar-bg {
+  background: rgba(12, 21, 5, 0.9);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+.cart-green-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8em;
+  color: #4CAF50;
+  margin: 0;
+}
+.cart-green-link {
+  color: #4CAF50;
+  font-weight: 600;
+  margin-left: 1.2em;
+  transition: color 0.3s;
+}
+.cart-green-link:hover {
+  color: #388e3c;
+}

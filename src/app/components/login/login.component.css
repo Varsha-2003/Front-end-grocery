@@ -1,0 +1,129 @@
+body.login-bg {
+  min-height: 100vh;
+  background: url('https://png.pngtree.com/background/20250120/original/pngtree-supermarket-grocery-store-with-fruit-and-vegetable-on-shelves-blurred-background-picture-image_15628104.jpg') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', Arial, sans-serif;
+}
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(12, 21, 5, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8em;
+  color: #4CAF50;
+  margin: 0;
+}
+.login-card {
+  background: rgba(255,255,255,0.10);
+  border-radius: 1.5em;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255,255,255,0.18);
+  max-width: 350px;
+  width: 100%;
+  margin: 7vh auto;
+  padding: 2.5em 2em 2em 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.login-card h2 {
+  font-size: 2em;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.2em;
+  letter-spacing: 1px;
+}
+.input-group input {
+  width: 100%;
+  padding: 0.9em 2.5em 0.9em 1em;
+  border-radius: 1.2em;
+  border: none;
+  background: rgba(255,255,255,0.18);
+  color: #000 !important;
+  margin-bottom: 1.2em;
+  font-size: 1em;
+  box-shadow: 0 2px 8px #0001;
+  outline: none;
+}
+.input-group input:focus,
+.input-group input:active {
+  color: #000 !important;
+  background: #fff !important;
+}
+.input-group input::placeholder {
+  color: #888 !important;
+}
+.input-group .fa {
+  position: absolute;
+  right: 1em;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #bdbdbd;
+  font-size: 1.2em;
+}
+.input-group .toggle-password {
+  position: absolute; right: 1em; top: 50%; transform: translateY(-50%); color: #aaa; cursor: pointer;
+}
+.login-actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1.2em;
+  color: #fff;
+  font-size: 0.98em;
+}
+.login-btn {
+  width: 100%;
+  background: linear-gradient(90deg, #a4508b 0%, #5f0a87 100%);
+  color: #fff;
+  border: none;
+  border-radius: 2em;
+  padding: 0.9em 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-bottom: 1em;
+  box-shadow: 0 2px 8px #4caf5033;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.login-btn:hover {
+  background: linear-gradient(90deg, #5f0a87 0%, #a4508b 100%);
+  transform: translateY(-2px) scale(1.03);
+}
+.signup-link {
+  color: #fff;
+  font-size: 0.98em;
+  margin-top: 0.7em;
+}
+.signup-link a {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: underline;
+  margin-left: 0.3em;
+}
+.error-msg {
+  color: #ffd6d6;
+  font-size: 0.97em;
+  margin-bottom: 0.7em;
+  text-align: center;
+}
+.success-msg {
+  color: #baffc9;
+  font-size: 0.97em;
+  margin-bottom: 0.7em;
+  text-align: center;
+}

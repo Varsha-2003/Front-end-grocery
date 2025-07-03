@@ -1,1 +1,130 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+  background: linear-gradient(135deg, #f6f8fa 0%, #e8f5e9 100%);
+  color: #222;
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Header/NavBar */
+.app-header, .navbar, header {
+  background: #181f1b;
+  color: #fff;
+  padding: 0.7em 2em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px #0001;
+}
+.app-header .logo, .navbar .logo, header .logo {
+  font-size: 2em;
+  font-weight: 700;
+  color: #4CAF50;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.app-header nav a, .navbar nav a, header nav a {
+  color: #b2dfdb;
+  text-decoration: none;
+  margin-left: 2em;
+  font-weight: 500;
+  font-size: 1.1em;
+  transition: color 0.2s;
+}
+.app-header nav a:hover, .navbar nav a:hover, header nav a:hover {
+  color: #4CAF50;
+}
+
+/* Main Content Cards/Sections */
+.card, .section, .products-container, .cart-container, .delivery-container, .feedback-container, .admin-login-container, .signup-container {
+  background: #fff;
+  border-radius: 1.2em;
+  box-shadow: 0 2px 16px #0002;
+  padding: 2.5em 2em 2em 2em;
+  margin: 2em auto;
+}
+
+/* Buttons */
+.btn, button, .shop-now-btn {
+  background: linear-gradient(90deg, #4CAF50 60%, #FFA500 100%);
+  color: #fff;
+  border: none;
+  border-radius: 2em;
+  padding: 0.7em 2.2em;
+  font-size: 1.1em;
+  font-weight: 600;
+  box-shadow: 0 2px 8px #4caf5033;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  outline: none;
+}
+.btn:hover, button:hover, .shop-now-btn:hover {
+  background: linear-gradient(90deg, #388E3C 60%, #FFA500 100%);
+  transform: translateY(-2px) scale(1.03);
+}
+
+/* Forms */
+input, select, textarea {
+  border: 1px solid #bdbdbd;
+  border-radius: 0.5em;
+  padding: 0.7em 1em;
+  font-size: 1em;
+  margin-bottom: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+/* Category Cards */
+.category-card, .product-card {
+  background: #fff;
+  border-radius: 1.2em;
+  box-shadow: 0 2px 16px #0002;
+  padding: 2em 1.5em;
+  margin: 1.5em;
+  text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.category-card:hover, .product-card:hover {
+  box-shadow: 0 6px 24px #4caf5040;
+  transform: translateY(-4px) scale(1.03);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .app-header, .navbar, header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1em;
+  }
+  .card, .section, .products-container, .cart-container, .delivery-container, .feedback-container, .admin-login-container, .signup-container {
+    padding: 1.2em 0.7em;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-header, .navbar, header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.7em 0.5em;
+  }
+  .card, .section, .products-container, .cart-container, .delivery-container, .feedback-container, .admin-login-container, .signup-container {
+    padding: 0.7em 0.3em;
+    margin: 1em 0.2em;
+  }
+}
+
+body.admin-login-bg {
+  min-height: 100vh;
+  background: url('https://d32ijn7u0aqfv4.cloudfront.net/wp/wp-content/uploads/raw/groceries-bag_SOAD19044_692778630_is_1560x880.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
