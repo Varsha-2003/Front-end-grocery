@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { ApiService } from '../../services/api.service';
 
 interface CompleteOrder {
   items: any[];
@@ -45,10 +46,12 @@ export class FeedbackComponent implements OnInit {
   completeOrder: CompleteOrder | null = null;
   isLoading: boolean = true;
   feedbackSubmitted: boolean = false;
+  error: string = '';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
@@ -89,17 +92,17 @@ export class FeedbackComponent implements OnInit {
       }
     };
 
-    // Save feedback to localStorage (in real app, send to backend)
-    if (isPlatformBrowser(this.platformId)) {
-      const existingFeedback = JSON.parse(localStorage.getItem('feedback') || '[]');
-      existingFeedback.push(feedback);
-      localStorage.setItem('feedback', JSON.stringify(existingFeedback));
-    }
-
-    console.log('Feedback submitted:', this.feedbackText, 'Rating:', this.rating);
-    
-    // Navigate to orders page after feedback
-    this.router.navigate(['/order']);
+    // Send feedback to backend
+    this.apiService.submitFeedback(feedback).subscribe({
+      next: () => {
+        this.feedbackSubmitted = true;
+        this.error = '';
+      },
+      error: (err) => {
+        this.error = 'Failed to submit feedback. Please try again.';
+        this.feedbackSubmitted = false;
+      }
+    });
   }
 
   goToHome(): void {

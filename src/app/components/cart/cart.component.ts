@@ -2,6 +2,8 @@ import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
 
 interface ProductRef {
   productId: number;
@@ -24,66 +26,100 @@ interface OrderItem {
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
-  cartItems: OrderItem[] = [];
+  cartItems: any[] = [];
   total: number = 0;
+  customerId: number = 0;
   paymentMethod: string = '';
+  loading: boolean = false;
+  error: string = '';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private router: Router
-  ) {}
-
-  ngOnInit(): void {
-    this.loadCart();
+    private router: Router,
+    private apiService: ApiService,
+    private authService: AuthService
+  ) {
   }
 
-  loadCart(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    const cartData = localStorage.getItem('cart');
-    if (cartData) {
-      this.cartItems = JSON.parse(cartData);
-      console.log('Loaded cart items:', this.cartItems);
-      this.calculateTotal();
+  ngOnInit(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
     }
+    if (isPlatformBrowser(this.platformId)) {
+      const userStr = localStorage.getItem('currentUser');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        this.customerId = user.customerId;
+      } else {
+        this.customerId = Number(localStorage.getItem('customerId'));
+      }
+    }
+    this.fetchCartItems();
+  }
+
+  fetchCartItems(): void {
+    this.apiService.getCartItemsByCustomer(this.customerId).subscribe({
+      next: (response: any) => {
+        if (Array.isArray(response)) {
+          this.cartItems = response;
+        } else if (response && Array.isArray(response.content)) {
+          this.cartItems = response.content;
+        } else {
+          this.cartItems = [];
+        }
+        this.calculateTotal();
+      },
+      error: (err: any) => {
+        this.error = 'Failed to load cart items.';
+        this.cartItems = [];
+      }
+    });
   }
 
   calculateTotal(): void {
     this.total = this.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   }
 
-  updateQuantity(item: OrderItem, change: number): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+  updateQuantity(item: any, change: number): void {
     const newQuantity = item.quantity + change;
     if (newQuantity > 0) {
-      item.quantity = newQuantity;
+      const updatedItem = { ...item, quantity: newQuantity };
+      this.apiService.updateOrderItem(item.orderItemId, updatedItem).subscribe({
+        next: () => {
+          item.quantity = newQuantity;
+          this.calculateTotal();
+        },
+        error: () => {
+          this.error = 'Failed to update quantity.';
+        }
+      });
     } else {
       this.removeItem(item);
-      return;
-    }
-    this.saveCart();
-    this.calculateTotal();
-  }
-
-  removeItem(item: OrderItem): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    const index = this.cartItems.findIndex(cartItem => cartItem.product.productId === item.product.productId);
-    if (index > -1) {
-      this.cartItems.splice(index, 1);
-      this.saveCart();
-      this.calculateTotal();
     }
   }
 
-  saveCart(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    localStorage.setItem('cart', JSON.stringify(this.cartItems));
+  removeItem(item: any): void {
+    this.apiService.deleteOrderItem(item.orderItemId).subscribe({
+      next: () => {
+        this.cartItems = this.cartItems.filter(cartItem => cartItem.orderItemId !== item.orderItemId);
+        this.calculateTotal();
+      },
+      error: () => {
+        this.error = 'Failed to remove item.';
+      }
+    });
   }
 
   clearCart(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    this.cartItems = [];
-    localStorage.removeItem('cart');
-    this.calculateTotal();
+    // Remove all items one by one (could be optimized with a backend batch endpoint)
+    const deleteObservables = this.cartItems.map(item => this.apiService.deleteOrderItem(item.orderItemId));
+    Promise.all(deleteObservables.map(obs => obs.toPromise())).then(() => {
+      this.cartItems = [];
+      this.calculateTotal();
+    }).catch(() => {
+      this.error = 'Failed to clear cart.';
+    });
   }
 
   get cartCount(): number {
@@ -91,33 +127,11 @@ export class CartComponent implements OnInit {
   }
 
   checkout(): void {
-    console.log('Checkout clicked, cartItems:', this.cartItems);
-    if (this.cartItems.length > 0) {
-      // Prepare orderItems for backend
-      const orderItems = this.cartItems.map(item => ({
-        quantity: item.quantity,
-        price: item.price,
-        product: { productId: item.product.productId }
-      }));
-      // Prepare order request (for backend integration)
-      const orderRequest = {
-        // customerId: ... (get from logged-in user)
-        orderDate: new Date().toISOString(),
-        totalAmount: this.total,
-        paymentMethod: this.paymentMethod,
-        status: 'Placed',
-        orderItems: orderItems
-      };
-      // For now, just save to localStorage as before
-      if (isPlatformBrowser(this.platformId)) {
-        const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-        orders.push(orderRequest);
-        localStorage.setItem('orders', JSON.stringify(orders));
-        localStorage.setItem('orderDetails', JSON.stringify(orderRequest));
-      }
-      this.router.navigate(['/delivery']);
-    } else {
-      alert('Your cart is empty!');
-    }
+    // Implement checkout logic as needed
+    alert('Checkout not implemented in backend cart integration demo.');
+  }
+
+  proceedToDelivery(): void {
+    this.router.navigate(['/delivery']);
   }
 }

@@ -13,43 +13,57 @@
     </div>
   </div>
 </nav>
+
 <div class="container mt-5">
   <h2 class="text-center mb-4">Your Orders</h2>
 
-  <table class="table table-striped table-bordered">
-    <thead class="table-dark">
+  <!-- Status Filter Buttons -->
+  <div class="status-filters text-center mb-4">
+    <div class="btn-group" role="group">
+      <button 
+        *ngFor="let status of statusOptions" 
+        type="button" 
+        class="btn btn-success"
+        (click)="filterByStatus(status.id)">
+        {{ status.name }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-success" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <!-- Orders Table -->
+  <table *ngIf="orders.length > 0 && !loading" class="table table-bordered table-hover mt-3">
+    <thead class="table-success">
       <tr>
-        <th>Order ID</th>
-        <th>Date</th>
-        <th>Customer</th>
-        <th>Payment</th>
+        <th>Order Date</th>
+        <th>Payment Method</th>
         <th>Status</th>
-        <th>Total</th>
-        <th>Items</th>
+        <th>Total Amount</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let order of orders">
-        <td>{{ order.orderId }}</td>
         <td>{{ order.orderDate | date:'medium' }}</td>
-        <td>{{ order.customer.fullName }}</td>
         <td>{{ order.paymentMethod }}</td>
-        <td>
-          <span class="badge" [ngClass]="{
-            'bg-success': order.status === 'Delivered',
-            'bg-warning': order.status === 'Placed',
-            'bg-info': order.status === 'Dispatched'
-          }">{{ order.status }}</span>
-        </td>
-        <td>₹{{ order.totalAmount }}</td>
-        <td>
-          <ul class="mb-0 ps-3">
-            <li *ngFor="let item of order.orderItems">
-              {{ item.productName }} x{{ item.quantity }} <span class="text-muted">(₹{{ item.price }})</span>
-            </li>
-          </ul>
-        </td>
+        <td>{{ order.status }}</td>
+        <td>{{ order.totalAmount }}</td>
       </tr>
     </tbody>
   </table>
+
+  <div *ngIf="orders.length === 0 && !loading" class="text-center">
+    <div class="alert alert-warning">
+      <h4>No Orders Found</h4>
+      <p>No order records are available.</p>
+    </div>
+  </div>
 </div>

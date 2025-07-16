@@ -139,19 +139,17 @@ body, :host {
 }
 
 /* Buttons */
-.btn-success, .btn-outline-danger {
-  background: #4CAF50 !important;
+.btn-success, .btn-outline-success {
+  background-color: #4CAF50 !important;
+  border-color: #4CAF50 !important;
   color: #fff !important;
-  border: none !important;
-  box-shadow: 0 2px 8px #4caf5033;
-  font-weight: 600;
-  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px #4caf5033 !important;
 }
 
-.btn-success:hover, .btn-outline-danger:hover {
-  background: #388e3c !important;
+.btn-success:hover, .btn-outline-success:hover {
+  background-color: #388e3c !important;
+  border-color: #388e3c !important;
   color: #fff !important;
-  transform: scale(1.03);
 }
 
 .btn-outline-secondary {
@@ -177,6 +175,23 @@ body, :host {
   background-color: #c82333;
   border-color: #bd2130;
   transform: scale(1.1);
+}
+
+/* Remove any orange box-shadow or background from all buttons */
+.btn, .btn-success, .btn-outline-success {
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Remove any orange gradient or background from cart-modern-checkout */
+.cart-modern-checkout {
+  background: #4CAF50 !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 2px 8px #4caf5033 !important;
+}
+.cart-modern-checkout:hover {
+  background: #388e3c !important;
 }
 
 /* Responsive Design */

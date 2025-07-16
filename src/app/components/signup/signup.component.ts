@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthService, SignupRequest } from '../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -21,50 +22,55 @@ export class SignupComponent {
   };
   success: string = '';
   error: string = '';
+  loading: boolean = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private authService: AuthService) { }
 
   onSignup(): void {
-    // Clear previous messages
     this.success = '';
     this.error = '';
+    this.loading = true;
 
     // Basic validation
     if (!this.user.fullName || !this.user.email || !this.user.phone || !this.user.password || !this.user.address) {
       this.error = 'Please fill in all fields';
+      this.loading = false;
       return;
     }
-
     if (this.user.password.length < 6) {
       this.error = 'Password must be at least 6 characters long';
+      this.loading = false;
       return;
     }
 
-    // In real app, you'd send this to the backend
-    // Save user to localStorage
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    users.push({
-      fullName: this.user.fullName,
+    // Prepare request for backend
+    const signupRequest: SignupRequest = {
+      customername: this.user.fullName,
       email: this.user.email,
-      phone: this.user.phone,
       password: this.user.password,
-      address: this.user.address
-    });
-    localStorage.setItem('users', JSON.stringify(users));
-    this.success = 'Signup successful! Welcome to GrocBee! Redirecting to login...';
-    
-    // Clear form
-    this.user = {
-      fullName: '',
-      email: '',
-      phone: '',
-      password: '',
-      address: ''
+      adress: this.user.address, // spelling matches backend
+      phonenumber: this.user.phone ? Number(this.user.phone) : undefined
     };
 
-    // Redirect to login after 2 seconds
-    setTimeout(() => {
-      this.router.navigate(['/login']);
-    }, 2000);
+    this.authService.signup(signupRequest).subscribe({
+      next: (response) => {
+        this.success = (response && response.message) ? response.message : 'Signup successful! Redirecting to login...';
+        this.loading = false;
+        this.user = { fullName: '', email: '', phone: '', password: '', address: '' };
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
+      },
+      error: (error) => {
+        if (typeof error.error === 'string') {
+          this.error = error.error;
+        } else if (error.error && error.error.message) {
+          this.error = error.error.message;
+        } else {
+          this.error = 'Signup failed. Please try again.';
+        }
+        this.loading = false;
+      }
+    });
   }
 }

@@ -18,7 +18,7 @@
         <a href="#"
            (click)="openProductManagementDropdown(); $event.preventDefault();"
            [attr.aria-expanded]="dropdownOpen === 'products'"
-           [ngClass]="{active: currentPanel === 'addProduct' || currentPanel === 'viewProducts' || currentPanel === 'productManagement'}">
+           [ngClass]="{active: currentPanel === 'addProduct' || currentPanel === 'viewProducts'}">
           <i class="fa fa-box"></i> Product Management
           <i class="fa fa-chevron-down" [ngClass]="{'rotate': dropdownOpen === 'products'}" style="transition: transform 0.3s;"></i>
         </a>
@@ -107,49 +107,25 @@
           <div class="card-icon"><i class="fa fa-users"></i></div>
           <div class="card-info">
             <h3>Total Users</h3>
-            <p>1,234</p>
+            <p>{{ customerCount }}</p>
           </div>
         </div>
         <div class="card">
           <div class="card-icon"><i class="fa fa-box"></i></div>
           <div class="card-info">
             <h3>Products</h3>
-            <p>567</p>
+            <p>{{ productCount }}</p>
           </div>
         </div>
         <div class="card">
           <div class="card-icon"><i class="fa fa-shopping-cart"></i></div>
           <div class="card-info">
             <h3>Orders</h3>
-            <p>89</p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-icon"><i class="fa fa-dollar-sign"></i></div>
-          <div class="card-info">
-            <h3>Revenue</h3>
-            <p>$12,345</p>
+            <p>{{ orderCount }}</p>
           </div>
         </div>
       </div>
-      <div class="recent-activity">
-        <h2>Recent Activity</h2>
-        <ul>
-          <li>
-            New order #1234 received <span class="activity-time">2 min ago</span>
-          </li>
-          <li>
-            Product "Organic Apples" stock updated
-            <span class="activity-time">15 min ago</span>
-          </li>
-          <li>
-            New user registration <span class="activity-time">1 hour ago</span>
-          </li>
-          <li>
-            Payment processed for order #1233 <span class="activity-time">2 hours ago</span>
-          </li>
-        </ul>
-      </div>
+      <!-- Removed Revenue card and Recent Activity section -->
     </div>
 
     <!-- Other Panels -->
@@ -157,37 +133,10 @@
     <app-products-panel *ngIf="currentPanel === 'addProduct' || currentPanel === 'viewProducts'"></app-products-panel>
     <app-orders-panel *ngIf="currentPanel === 'orders'"></app-orders-panel>
     <app-offers-panel *ngIf="currentPanel === 'offers'"></app-offers-panel>
-
-    <div class="panel-content" *ngIf="currentPanel === 'productManagement'">
-      <h2>Product Management</h2>
-      <form (ngSubmit)="addProductToList()" style="margin-bottom:1em;display:flex;gap:1em;align-items:center;">
-        <input type="text" [(ngModel)]="newProduct.name" name="productName" placeholder="Product Name" required class="form-control" style="width:180px;">
-        <input type="number" [(ngModel)]="newProduct.price" name="productPrice" placeholder="Price" required class="form-control" style="width:120px;">
-        <button type="submit" class="btn-product-action">Add Product</button>
-      </form>
-      <table class="table table-striped" style="width:100%;background:#fff;border-radius:1em;overflow:hidden;">
-        <thead>
-          <tr style="background:#f7f7f7;">
-            <th>Name</th>
-            <th>Price</th>
-            <th>Remove</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let prod of productList; let i = index">
-            <td>{{ prod.name }}</td>
-            <td>{{ prod.price }}</td>
-            <td>
-              <button class="btn-product-action" (click)="removeProductFromList(i)">Remove</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 
   <!-- Cart Modal/Panel -->
-  <app-cart-modal [show]="showCartModal" (close)="showCartModal = false"></app-cart-modal>
+  <!-- <app-cart-modal [show]="showCartModal" (close)="showCartModal = false"></app-cart-modal> -->
 </div>
 
 <!-- Secondary Navbar - Looks like it may be unrelated to dashboard? -->

@@ -4,39 +4,62 @@
     <table class="table table-bordered table-striped align-middle">
       <thead class="table-success">
         <tr>
-          <th>ID</th>
-          <th>Customer</th>
+          <th>Order Date</th>
+          <th>Payment Method</th>
           <th>Status</th>
-          <th>Items</th>
-          <th>Total</th>
-          <th>Agent</th>
-          <th>Invoice</th>
+          <th>Total Amount</th>
+          <th>Delivery Date</th>
+          <th>Delivery Cost</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let o of orders">
-          <td>{{ o.id }}</td>
-          <td>{{ o.customer }}</td>
+          <td>{{ o.orderDate }}</td>
+          <td>{{ o.paymentMethod }}</td>
+          <td>{{ o.status }}</td>
+          <td>₹{{ o.totalAmount }}</td>
+          <td>{{ o.deliveryDate || '-' }}</td>
+          <td>{{ o.deliveryCost != null ? ('₹' + o.deliveryCost) : '-' }}</td>
           <td>
-            <select class="form-select form-select-sm" [(ngModel)]="o.status" (change)="updateOrderStatus(o.id, o.status)">
-              <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
-            </select>
-          </td>
-          <td>{{ o.items }}</td>
-          <td>₹{{ o.total }}</td>
-          <td>
-            <input class="form-control form-control-sm" [(ngModel)]="o.agent" (change)="assignAgent(o.id, o.agent)" placeholder="Assign agent">
-          </td>
-          <td>
-            <span *ngIf="o.invoice" class="badge bg-success">Yes</span>
-            <button *ngIf="!o.invoice" class="btn btn-sm btn-outline-primary" (click)="generateInvoice(o.id)">Generate</button>
-          </td>
-          <td>
-            <button class="btn btn-sm btn-danger" (click)="deleteOrder(o.id)">Delete</button>
+            <button class="btn btn-sm btn-primary" (click)="editOrder(o)">Edit</button>
           </td>
         </tr>
       </tbody>
     </table>
+  </div>
+</div>
+
+<!-- Edit Order Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{show: showEditModal}" style="display: block;" *ngIf="showEditModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Order #{{ editedOrder?.orderId }}</h5>
+        <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="saveEditOrder()">
+          <div class="mb-2">
+            <label>Status</label>
+            <select class="form-select" [(ngModel)]="editedOrder.status" name="status">
+              <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label>Delivery Date</label>
+            <input class="form-control" type="date" [(ngModel)]="editedOrder.deliveryDate" name="deliveryDate">
+          </div>
+          <div class="mb-2">
+            <label>Delivery Cost</label>
+            <input class="form-control" type="number" [(ngModel)]="editedOrder.deliveryCost" name="deliveryCost">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </div> 

@@ -1,20 +1,19 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AdminApiService } from '../../../services/admin-api.service';
+import { AuthService } from '../../../services/auth.service';
 
 interface Product {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
+  productId: number;
+  productName: string;
   category: string;
   brand: string;
-  image: string;
   description: string;
-  discount: number;
-  minStock: number;
-  maxStock: number;
-  hidden: boolean;
+  price: number;
+  stockQuantity: number;
+  imageUrl: string;
+  active: boolean;
 }
 
 @Component({
@@ -25,88 +24,70 @@ interface Product {
   styleUrls: ['./products-panel.component.css']
 })
 export class ProductsPanelComponent {
-  products: Product[] = [
-    {id: 1, name: 'Organic Apples', price: 120, quantity: 30, category: 'Fruits', brand: 'FreshFarm', image: '', description: 'Fresh organic apples.', discount: 0, minStock: 10, maxStock: 100, hidden: false},
-    {id: 2, name: 'Milk 1L', price: 55, quantity: 50, category: 'Dairy', brand: 'DairyBest', image: '', description: 'Pure cow milk.', discount: 5, minStock: 20, maxStock: 200, hidden: false}
-  ];
-  productIdCounter = 3;
+  products: Product[] = [];
+  loading = true;
+  error = '';
 
-  showAddForm = false;
   showEditForm = false;
   editProduct: Product | null = null;
 
-  // Add Product form model
-  newProduct: Product = {
-    id: 0,
-    name: '',
-    price: 0,
-    quantity: 0,
-    category: '',
-    brand: '',
-    image: '',
-    description: '',
-    discount: 0,
-    minStock: 0,
-    maxStock: 0,
-    hidden: false
-  };
-
-  toggleAddForm() {
-    this.showAddForm = !this.showAddForm;
-    this.showEditForm = false;
-    this.resetNewProduct();
+  constructor(private adminApi: AdminApiService, private authService: AuthService) {
+    console.log('ProductsPanelComponent loaded');
+    this.fetchProducts();
   }
 
-  addProduct() {
-    const prod = { ...this.newProduct, id: this.productIdCounter++ };
-    this.products.push(prod);
-    this.toggleAddForm();
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  fetchProducts() {
+    this.loading = true;
+    this.adminApi.getProducts({ page: 0, size: 100 }).subscribe({
+      next: (res) => {
+        this.products = res.content ? res.content : res;
+        console.log('Fetched products:', this.products);
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Failed to load products';
+        this.loading = false;
+      }
+    });
+  }
+
+  // Remove newProduct object, showAddForm, toggleAddForm, resetNewProduct, addProduct, and related code
+
+  // Toggle product visibility (active/inactive)
+  toggleProductActive(product: Product) {
+    this.loading = true;
+    this.adminApi.setProductActiveStatus(product.productId, !product.active).subscribe({
+      next: (updated: Product) => {
+        product.active = updated.active;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Failed to update product visibility';
+        this.loading = false;
+      }
+    });
   }
 
   edit(prod: Product) {
     this.editProduct = { ...prod };
     this.showEditForm = true;
-    this.showAddForm = false;
   }
 
   updateProduct() {
     if (!this.editProduct) return;
-    const idx = this.products.findIndex(p => p.id === this.editProduct!.id);
-    if (idx > -1) {
-      this.products[idx] = { ...this.editProduct };
-    }
-    this.showEditForm = false;
-    this.editProduct = null;
-  }
-
-  deleteProduct(id: number) {
-    this.products = this.products.filter(p => p.id !== id);
-  }
-
-  hideProduct(id: number) {
-    const prod = this.products.find(p => p.id === id);
-    if (prod) prod.hidden = true;
-  }
-
-  unhideProduct(id: number) {
-    const prod = this.products.find(p => p.id === id);
-    if (prod) prod.hidden = false;
-  }
-
-  resetNewProduct() {
-    this.newProduct = {
-      id: 0,
-      name: '',
-      price: 0,
-      quantity: 0,
-      category: '',
-      brand: '',
-      image: '',
-      description: '',
-      discount: 0,
-      minStock: 0,
-      maxStock: 0,
-      hidden: false
-    };
+    this.adminApi.editProduct(this.editProduct.productId, this.editProduct).subscribe({
+      next: () => {
+        this.showEditForm = false;
+        this.editProduct = null;
+        this.fetchProducts();
+      },
+      error: () => {
+        this.error = 'Failed to update product';
+      }
+    });
   }
 } 

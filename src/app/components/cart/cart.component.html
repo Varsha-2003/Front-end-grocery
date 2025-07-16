@@ -16,51 +16,57 @@
 <div class="cart-modern-bg">
   <div class="cart-modern-container">
     <div class="cart-modern-left">
-      <h2 class="cart-title">My cart</h2>
-      <div *ngIf="cartItems.length === 0" class="empty-cart-modern">
+      <h2 class="cart-title">All Order Items</h2>
+      <div *ngIf="loading" class="text-center my-4">
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+      <div *ngIf="cartItems.length === 0 && !loading" class="empty-cart-modern">
         <i class="fas fa-shopping-cart fa-3x"></i>
-        <p>Your cart is empty.</p>
-        <a routerLink="/products" class="btn btn-success">Continue Shopping</a>
+        <p>No order items found.</p>
       </div>
-      <div *ngFor="let item of cartItems; let i = index" class="cart-modern-item">
-        <img [src]="item.product.imageUrl" [alt]="item.product.productName" class="cart-modern-img">
-        <div class="cart-modern-info">
-          <div class="cart-modern-name">{{ item.product.productName }}</div>
-          <div class="cart-modern-price">₹{{ item.price }}</div>
-          <div class="cart-modern-desc">{{ item.product.description }}</div>
-        </div>
-        <div class="cart-modern-qty">
-          <input type="number" min="1" [(ngModel)]="item.quantity" (change)="updateQuantity(item, 0)">
-        </div>
-        <div class="cart-modern-subtotal">₹{{ item.price * item.quantity }}</div>
-        <button class="cart-modern-remove" (click)="removeItem(item)"><i class="fas fa-times"></i></button>
-      </div>
+      <table *ngIf="cartItems.length > 0" class="table table-bordered table-hover mt-3">
+        <thead class="table-success">
+          <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cartItems">
+            <td>{{ item.product?.productName }}</td>
+            <td>
+              <div class="quantity-controls">
+                <button class="btn btn-outline-success" (click)="updateQuantity(item, -1)">-</button>
+                <span>{{ item.quantity }}</span>
+                <button class="btn btn-outline-success" (click)="updateQuantity(item, 1)">+</button>
+              </div>
+            </td>
+            <td>₹{{ item.price }}</td>
+            <td>
+              <button class="btn btn-success btn-sm" (click)="removeItem(item)"><i class="fas fa-trash"></i> Remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn btn-outline-success w-100 mt-2" (click)="clearCart()" [disabled]="cartItems.length === 0">Clear Cart</button>
     </div>
     <div class="cart-modern-right">
       <div class="cart-modern-summary">
         <h3>Order summary</h3>
         <div class="cart-modern-row">
-          <span>Subtotal</span>
-          <span>₹{{ total }}</span>
-        </div>
-        <div class="cart-modern-row">
-          <span class="cart-modern-link">Estimate Shipping</span>
-          <span>-</span>
+          <span>Total Items</span>
+          <span>{{ cartCount }}</span>
         </div>
         <div class="cart-modern-row cart-modern-total">
           <span>Total</span>
           <span>₹{{ total }}</span>
         </div>
-        <div class="cart-modern-row">
-          <span>Pay Now</span>
-          <span>₹{{ total / 2 | number:'1.2-2' }}</span>
-        </div>
-        <div class="cart-modern-row">
-          <span>Pay Later</span>
-          <span>₹{{ total / 2 | number:'1.2-2' }}</span>
-        </div>
-        <button class="cart-modern-checkout" (click)="checkout()">Checkout</button>
-        <button class="btn btn-outline-danger w-100 mt-2" (click)="clearCart()">Clear Cart</button>
+        <button class="cart-modern-checkout" (click)="proceedToDelivery()" [disabled]="cartItems.length === 0">Checkout</button>
         <div class="cart-modern-secure"><i class="fas fa-lock"></i> Secure Checkout</div>
       </div>
     </div>

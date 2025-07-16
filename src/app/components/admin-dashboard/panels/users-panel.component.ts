@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AdminApiService } from '../../../services/admin-api.service';
 
-interface User {
-  id: number;
-  name: string;
+interface Customer {
+  customerId: number;
+  fullName: string;
   email: string;
-  role: 'customer' | 'admin';
-  status: 'active' | 'blocked';
+  address: string;
+  phone: string;
 }
 
 @Component({
@@ -17,76 +18,68 @@ interface User {
   templateUrl: './users-panel.component.html',
   styleUrls: ['./users-panel.component.css']
 })
-export class UsersPanelComponent {
-  users: User[] = [
-    { id: 1, name: 'Alice Smith', email: 'alice@example.com', role: 'customer', status: 'active' },
-    { id: 2, name: 'Bob Johnson', email: 'bob@example.com', role: 'admin', status: 'active' },
-    { id: 3, name: 'Charlie Lee', email: 'charlie@example.com', role: 'customer', status: 'blocked' }
-  ];
-  userIdCounter = 4;
+export class UsersPanelComponent implements OnInit {
+  customers: Customer[] = [];
+  loading = true;
+  error = '';
+  editingCustomerId: number | null = null;
+  editedCustomer: Customer | null = null;
 
-  showAddForm = false;
-  showEditForm = false;
-  editUser: User | null = null;
+  constructor(private adminApi: AdminApiService) {}
 
-  // Add User form model
-  newUser: User = {
-    id: 0,
-    name: '',
-    email: '',
-    role: 'customer',
-    status: 'active'
-  };
-
-  toggleAddForm() {
-    this.showAddForm = !this.showAddForm;
-    this.showEditForm = false;
-    this.resetNewUser();
+  ngOnInit() {
+    console.log('UsersPanelComponent ngOnInit called');
+    this.adminApi.getCustomers().subscribe({
+      next: (data) => {
+        this.customers = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        if (err.message && err.message.includes('No auth token')) {
+          this.error = 'You are not logged in. Please log in to view customers.';
+        } else {
+          this.error = 'Failed to load customers';
+        }
+        this.loading = false;
+      }
+    });
   }
 
-  addUser() {
-    const user = { ...this.newUser, id: this.userIdCounter++ };
-    this.users.push(user);
-    this.toggleAddForm();
+  startEdit(customer: Customer) {
+    this.editingCustomerId = customer.customerId;
+    this.editedCustomer = { ...customer };
   }
 
-  edit(user: User) {
-    this.editUser = { ...user };
-    this.showEditForm = true;
-    this.showAddForm = false;
+  cancelEdit() {
+    this.editingCustomerId = null;
+    this.editedCustomer = null;
   }
 
-  updateUser() {
-    if (!this.editUser) return;
-    const idx = this.users.findIndex(u => u.id === this.editUser!.id);
-    if (idx > -1) {
-      this.users[idx] = { ...this.editUser };
-    }
-    this.showEditForm = false;
-    this.editUser = null;
-  }
-
-  deleteUser(id: number) {
-    if (confirm('Delete this user?')) {
-      this.users = this.users.filter(u => u.id !== id);
+  saveEdit() {
+    if (this.editedCustomer) {
+      this.adminApi.editCustomer(this.editedCustomer.customerId, this.editedCustomer).subscribe({
+        next: (updated) => {
+          const idx = this.customers.findIndex(c => c.customerId === updated.customerId);
+          if (idx !== -1) this.customers[idx] = updated;
+          this.cancelEdit();
+        },
+        error: () => {
+          this.error = 'Failed to update customer';
+        }
+      });
     }
   }
 
-  blockUser(user: User) {
-    user.status = 'blocked';
-  }
-
-  unblockUser(user: User) {
-    user.status = 'active';
-  }
-
-  resetNewUser() {
-    this.newUser = {
-      id: 0,
-      name: '',
-      email: '',
-      role: 'customer',
-      status: 'active'
-    };
+  deleteCustomer(customer: Customer) {
+    if (confirm('Are you sure you want to delete this customer?')) {
+      this.adminApi.deleteCustomer(customer.customerId).subscribe({
+        next: () => {
+          this.customers = this.customers.filter(c => c.customerId !== customer.customerId);
+        },
+        error: () => {
+          this.error = 'Failed to delete customer';
+        }
+      });
+    }
   }
 } 

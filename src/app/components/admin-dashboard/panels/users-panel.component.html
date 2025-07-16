@@ -1,88 +1,42 @@
 <div class="panel-content">
   <h2>User Management</h2>
 
-  <!-- Add User Button -->
-  <button class="btn btn-success mb-3" (click)="toggleAddForm()" *ngIf="!showAddForm && !showEditForm">Add User</button>
+  <div *ngIf="loading">Loading customers...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-  <!-- Add User Form -->
-  <form *ngIf="showAddForm" (ngSubmit)="addUser()" class="mb-4 border rounded p-3 bg-light">
-    <h4>Add User</h4>
-    <div class="row">
-      <div class="col-md-4 mb-2">
-        <label>Name:</label>
-        <input class="form-control" [(ngModel)]="newUser.name" name="name" required>
-      </div>
-      <div class="col-md-4 mb-2">
-        <label>Email:</label>
-        <input class="form-control" type="email" [(ngModel)]="newUser.email" name="email" required>
-      </div>
-      <div class="col-md-2 mb-2">
-        <label>Role:</label>
-        <select class="form-select" [(ngModel)]="newUser.role" name="role">
-          <option value="customer">Customer</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-    </div>
-    <div class="mt-2">
-      <button type="submit" class="btn btn-success">Add User</button>
-      <button type="button" class="btn btn-secondary ms-2" (click)="toggleAddForm()">Cancel</button>
-    </div>
-  </form>
-
-  <!-- Edit User Form -->
-  <form *ngIf="showEditForm && editUser" (ngSubmit)="updateUser()" class="mb-4 border rounded p-3 bg-light">
-    <h4>Edit User</h4>
-    <div class="row">
-      <div class="col-md-4 mb-2">
-        <label>Name:</label>
-        <input class="form-control" [(ngModel)]="editUser.name" name="editName" required>
-      </div>
-      <div class="col-md-4 mb-2">
-        <label>Email:</label>
-        <input class="form-control" type="email" [(ngModel)]="editUser.email" name="editEmail" required>
-      </div>
-      <div class="col-md-2 mb-2">
-        <label>Role:</label>
-        <select class="form-select" [(ngModel)]="editUser.role" name="editRole">
-          <option value="customer">Customer</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-    </div>
-    <div class="mt-2">
-      <button type="submit" class="btn btn-success">Update User</button>
-      <button type="button" class="btn btn-secondary ms-2" (click)="showEditForm = false">Cancel</button>
-    </div>
-  </form>
-
-  <!-- Users Table -->
-  <div class="table-responsive">
+  <div class="table-responsive" *ngIf="!loading && !error">
     <table class="table table-bordered table-striped align-middle">
       <thead class="table-success">
         <tr>
+          <th>ID</th>
           <th>Name</th>
           <th>Email</th>
-          <th>Role</th>
-          <th>Status</th>
+          <th>Address</th>
+          <th>Phone</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role | titlecase }}</td>
-          <td>
-            <span [ngClass]="{'text-success': user.status === 'active', 'text-danger': user.status === 'blocked'}">
-              {{ user.status | titlecase }}
-            </span>
+        <tr *ngFor="let customer of customers">
+          <td>{{ customer.customerId }}</td>
+          <td *ngIf="editingCustomerId !== customer.customerId">{{ customer.fullName }}</td>
+          <td *ngIf="editingCustomerId === customer.customerId">
+            <input *ngIf="editedCustomer" [(ngModel)]="editedCustomer.fullName" />
+          </td>
+          <td>{{ customer.email }}</td>
+          <td *ngIf="editingCustomerId !== customer.customerId">{{ customer.address }}</td>
+          <td *ngIf="editingCustomerId === customer.customerId">
+            <input *ngIf="editedCustomer" [(ngModel)]="editedCustomer.address" />
+          </td>
+          <td *ngIf="editingCustomerId !== customer.customerId">{{ customer.phone }}</td>
+          <td *ngIf="editingCustomerId === customer.customerId">
+            <input *ngIf="editedCustomer" [(ngModel)]="editedCustomer.phone" />
           </td>
           <td>
-            <button class="btn btn-sm btn-primary me-1" (click)="edit(user)">Edit</button>
-            <button class="btn btn-sm btn-danger me-1" (click)="deleteUser(user.id)">Delete</button>
-            <button *ngIf="user.status === 'active'" class="btn btn-sm btn-warning" (click)="blockUser(user)">Block</button>
-            <button *ngIf="user.status === 'blocked'" class="btn btn-sm btn-success" (click)="unblockUser(user)">Unblock</button>
+            <button *ngIf="editingCustomerId !== customer.customerId" class="btn btn-primary btn-sm" (click)="startEdit(customer)">Edit</button>
+            <button *ngIf="editingCustomerId === customer.customerId" class="btn btn-success btn-sm" (click)="saveEdit()">Save</button>
+            <button *ngIf="editingCustomerId === customer.customerId" class="btn btn-secondary btn-sm" (click)="cancelEdit()">Cancel</button>
+            <button class="btn btn-danger btn-sm ms-2" (click)="deleteCustomer(customer)">Delete</button>
           </td>
         </tr>
       </tbody>

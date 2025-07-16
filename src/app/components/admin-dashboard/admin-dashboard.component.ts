@@ -7,7 +7,7 @@ import { UsersPanelComponent } from './panels/users-panel.component';
 import { ProductsPanelComponent } from './panels/products-panel.component';
 import { OrdersPanelComponent } from './panels/orders-panel.component';
 import { OffersPanelComponent } from './panels/offers-panel.component';
-import { CartModalComponent } from './panels/cart-modal.component';
+import { AdminApiService } from '../../services/admin-api.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -19,8 +19,7 @@ import { CartModalComponent } from './panels/cart-modal.component';
     UsersPanelComponent,
     ProductsPanelComponent,
     OrdersPanelComponent,
-    OffersPanelComponent,
-    CartModalComponent
+    OffersPanelComponent
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
@@ -55,7 +54,28 @@ export class AdminDashboardComponent {
   productList: { name: string; price: number }[] = [];
   newProduct = { name: '', price: 0 };
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  customerCount: number = 0;
+  productCount: number = 0;
+  orderCount: number = 0;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private adminApi: AdminApiService) {
+    this.fetchCounts();
+  }
+
+  fetchCounts() {
+    this.adminApi.getCustomerCount().subscribe({
+      next: (count) => this.customerCount = count,
+      error: () => this.customerCount = 0
+    });
+    this.adminApi.getProductCount().subscribe({
+      next: (count) => this.productCount = count,
+      error: () => this.productCount = 0
+    });
+    this.adminApi.getOrderCount().subscribe({
+      next: (count) => this.orderCount = count,
+      error: () => this.orderCount = 0
+    });
+  }
 
   // Demo admin cart count
   get adminCartCount(): number {
@@ -80,6 +100,7 @@ export class AdminDashboardComponent {
   }
 
   setPanel(panel: string) {
+    console.log('Switching to panel:', panel);
     this.currentPanel = panel;
     // Close sidebar on mobile
     this.sidebarOpen = false;
@@ -87,7 +108,7 @@ export class AdminDashboardComponent {
     if (panel === 'addProduct' || panel === 'viewProducts' || panel === 'productManagement') {
       this.dropdownOpen = 'products';
     } else {
-    this.dropdownOpen = null;
+      this.dropdownOpen = null;
     }
   }
 
@@ -110,8 +131,8 @@ export class AdminDashboardComponent {
   }
 
   openProductManagementDropdown() {
-    this.currentPanel = 'productManagement';
-    this.dropdownOpen = 'products';
+    this.dropdownOpen = this.dropdownOpen === 'products' ? null : 'products';
+    console.log('Dropdown open:', this.dropdownOpen);
   }
 
   addProductToList() {
